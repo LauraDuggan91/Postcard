@@ -1,0 +1,72 @@
+//login page
+
+@keyframes slidy {
+	0% { left: 0%; }
+	20% { left: 0%; }
+	25% { left: -100%; }
+	45% { left: -100%; }
+	50% { left: -200%; }
+	70% { left: -200%; }
+	75% { left: -300%; }
+	95% { left: -300%; }
+	100% { left: -400%; }
+}
+
+div#slider { 
+	overflow: hidden; 
+}
+
+div#slider figure img { 
+	object-fit: cover;
+	width: 100vw; 
+	height: 100vh;
+}
+
+div#slider figure { 
+  position: relative;
+  width: 500%;
+  margin: 0;
+  left: 0;
+  font-size: 0;
+  animation: 30s slidy infinite; 
+}
+
+.overlay {
+	position: absolute;
+	transform: translateX(-50%);
+	text-align: center;
+	transform: translateY(-50%);
+	top: 50%;
+	height: 60vh;
+	width: 100vw;
+	background-color: rgba(0,0,0,0.7);
+	z-index: 200;
+	h1 {
+		color: $blueGrey;
+		font-size: 80px;
+		top: 20%;
+		text-transform: uppercase;
+		// transform: translateY(-50%);
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		margin: 0;
+	}
+	h3 {
+		text-transform: uppercase;
+		font-family: 'Roboto', sans-serif;
+		font-weight: 300;
+		color: #92AFC0;
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		bottom: 40%;
+		// background-color: white;
+	}
+	button {
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		bottom: 20%;
+	}
+}

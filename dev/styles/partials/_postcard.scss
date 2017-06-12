@@ -1,0 +1,37 @@
+.singleCard {
+	position: relative;
+}
+
+ul {
+	padding-left: 0px;
+	margin: 10px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+li {
+	width: 50%;
+}
+
+.renderedImage {
+	max-width: 100%;
+	// max-height: 300px;
+	// object-fit: cover;
+}
+
+.displayBack {
+	visibility: hidden;
+	position: absolute;
+	top:0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 100;
+	background-color: $blueGrey;
+}
+
+.singleCard:hover .displayBack{
+	visibility: visible;
+}
