@@ -4,41 +4,17 @@ import firebase, { config, auth, provider, dbRef} from './firebase.js'
 import { 
     BrowserRouter as Router, 
     Route, Link } from 'react-router-dom';
-import Autocomplete from 'react-google-autocomplete';
-import Calendar from 'react-input-calendar';
 
+import PostcardForm from './components/postcardform.js';
+import Modal from './components/modal.js'
 
 
 //user logs into app using google
 //upon logging in, they see their grid of postcards
 //ability to add a new entry
 //ability to sort entries by date or by country or randomly or by cost
-class PostcardGrid extends React.Component {
-	render() {
-		// console.log("post", this.props.postcards);
-		return (
-			<div className="container">
-				<h1>My Postcards</h1>
-				<p>To add a new postcard, enter some information about your trip.</p>
-				<form onSubmit={this.props.createPostcard}>
 
-					
-    				<input name="location" value={this.props.postcard.location} onChange={this.props.handleChange} id="location" type="text" placeholder="Location"/>
 
-					<input name="dayNumber"  value={this.props.postcard.dayNumber} onChange={this.props.handleChange} id="dayNumber" type="text" placeholder="Day Number"/>
-
-					<input name="amountSpent" value={this.props.postcard.amountSpent}onChange={this.props.handleChange} id="amountSpent" type="text" placeholder="Amount you spent"/>
-
-					<textarea name="dayInfo" value={this.props.postcard.dayInfo} onChange={this.props.handleChange} id="dayInfo" cols="30" rows="1" maxLength="600" placeholder="Description (max 600 characters)"></textarea>
-
-					<input name="postcardImage" value={this.props.postcard.postcardImage} onChange={this.props.uploadPhoto} id="postcardImage" type="file" accept="image/*"/>
-
-					<input type="submit" value="Submit"/>
-				</form>
-			</div>
-		)
-	}
-}
 
 
 //all login info needs to be in main component
@@ -49,13 +25,17 @@ class App extends React.Component {
 			postcard: {},
 			postcards: [],
 			loggedIn: false,
-			user: null
+			user: null,
+			isModalOpen: false
 		}
 		this.createPostcard = this.createPostcard.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.uploadPhoto = this.uploadPhoto.bind(this);
+		this.openModal = this.openModal.bind(this);
+		this.closeModal = this.closeModal.bind(this);
 		this.login = this.login.bind(this);
 		this.logout = this.logout.bind(this);
+		this.onPlaceSelected = this.onPlaceSelected.bind(this);
 	}
 	uploadPhoto(e) {
 		e.preventDefault();
@@ -66,7 +46,7 @@ class App extends React.Component {
 		e.preventDefault();
 
 		/* Add Photo */
-		const storageRef = firebase.storage().ref('userPhotos/' + this.file.name)
+		const storageRef = firebase.storage().ref('userPhotos/')
 		const postcardPhoto = storageRef.child(this.file.name);
 
 		postcardPhoto.put(this.file).then((snapshot) => {
@@ -91,6 +71,18 @@ class App extends React.Component {
 			}); 
 		})
 	}
+	onPlaceSelected(place) {
+		// console.log(place);
+		const myPlace = place.formatted_address
+		const postcard = Object.assign({},this.state.postcard);
+		postcard.location = myPlace;
+		this.setState({
+			postcard
+		});
+	}
+	onDateSelected(date) {
+		console.log(date)
+	}
 	handleChange(e) {
 		const newPostcard = Object.assign({}, this.state.postcard);
 		newPostcard[e.target.name] = e.target.value;
@@ -103,6 +95,20 @@ class App extends React.Component {
 		const userRef = firebase.database().ref(`${userId}/${key}`);
 		userRef.remove();
 	}
+
+	openModal(e){
+	e.preventDefault();
+	// console.log(this)
+		this.setState({
+			isModalOpen: true
+		});
+	}
+	closeModal(e){
+		this.setState({
+			isModalOpen: false
+		})
+	}
+
 	login() {
 		auth.signInWithPopup(provider)
 		.then((result) => {
@@ -130,7 +136,8 @@ class App extends React.Component {
 	    				<div>
 			    			<div>
 			    				<button className="logoutButton" onClick={this.logout}>Log Out</button>
-			    				<PostcardGrid postcard={this.state.postcard} postcards={this.state.postcards} createPostcard={this.createPostcard} handleChange={this.handleChange} uploadPhoto={this.uploadPhoto}/>
+			    				<PostcardForm postcard={this.state.postcard} postcards={this.state.postcards} createPostcard={this.createPostcard} handleChange={this.handleChange} uploadPhoto={this.uploadPhoto} onPlaceSelected={this.onPlaceSelected} onDateSelected={this.onDateSelected} openModal={this.openModal} closeModal={this.closeModal} isModalOpen={this.state.isModalOpen} />
+			    				
 			    			</div>
 			    			<ul>
 			    				{this.state.postcards.map((post) => {
@@ -225,15 +232,10 @@ class App extends React.Component {
     		}
     	});
     }
-// <Autocomplete name="location" value={this.props.postcard.location} id="location" type="text" placeholder="Location" onPlaceSelected={(place) => {
-//       						console.log(place);
-//       						const myPlace = place.formatted_address
-//       						this.setState({
-// 							location: myPlace
-// 							})
-//     					}}/>
-// format="DD/MM/YYYY" date='6-12-2017'
+
 }
+
+
 
 
 
