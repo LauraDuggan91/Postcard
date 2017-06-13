@@ -6,15 +6,39 @@ import {
     Route, Link } from 'react-router-dom';
 import Autocomplete from 'react-google-autocomplete';
 import Calendar from 'react-input-calendar';
-// import 'react-input-calendar/style/index.css';
-// import { DateField, Calendar } from 'react-date-picker';
+
 
 
 //user logs into app using google
 //upon logging in, they see their grid of postcards
 //ability to add a new entry
 //ability to sort entries by date or by country or randomly or by cost
+class PostcardGrid extends React.Component {
+	render() {
+		// console.log("post", this.props.postcards);
+		return (
+			<div className="container">
+				<h1>My Postcards</h1>
+				<p>To add a new postcard, enter some information about your trip.</p>
+				<form onSubmit={this.props.createPostcard}>
 
+					
+    				<input name="location" value={this.props.postcard.location} onChange={this.props.handleChange} id="location" type="text" placeholder="Location"/>
+
+					<input name="dayNumber"  value={this.props.postcard.dayNumber} onChange={this.props.handleChange} id="dayNumber" type="text" placeholder="Day Number"/>
+
+					<input name="amountSpent" value={this.props.postcard.amountSpent}onChange={this.props.handleChange} id="amountSpent" type="text" placeholder="Amount you spent"/>
+
+					<textarea name="dayInfo" value={this.props.postcard.dayInfo} onChange={this.props.handleChange} id="dayInfo" cols="30" rows="1" maxLength="600" placeholder="Description (max 600 characters)"></textarea>
+
+					<input name="postcardImage" value={this.props.postcard.postcardImage} onChange={this.props.uploadPhoto} id="postcardImage" type="file" accept="image/*"/>
+
+					<input type="submit" value="Submit"/>
+				</form>
+			</div>
+		)
+	}
+}
 
 
 //all login info needs to be in main component
@@ -47,7 +71,7 @@ class App extends React.Component {
 
 		postcardPhoto.put(this.file).then((snapshot) => {
 		postcardPhoto.getDownloadURL().then((url) => {
-				console.log(this.state);
+				// console.log(this.state);
 				const postcardObj = Object.assign({}, this.state.postcard);
 				postcardObj.image_url = url;
 				const userId = this.state.user.uid;
@@ -106,7 +130,7 @@ class App extends React.Component {
 	    				<div>
 			    			<div>
 			    				<button className="logoutButton" onClick={this.logout}>Log Out</button>
-			    				<PostcardGrid postcard={this.state.postcard} createPostcard={this.createPostcard} handleChange={this.handleChange} uploadPhoto={this.uploadPhoto}/>
+			    				<PostcardGrid postcard={this.state.postcard} postcards={this.state.postcards} createPostcard={this.createPostcard} handleChange={this.handleChange} uploadPhoto={this.uploadPhoto}/>
 			    			</div>
 			    			<ul>
 			    				{this.state.postcards.map((post) => {
@@ -118,9 +142,9 @@ class App extends React.Component {
 				    						</div>
 				    						<div className="displayBack clearfix">
 					    						<h3>{post.location}</h3>
-					    						<p>Day: {post.dayNumber}</p>
+					    						<p>Date: {post.dayNumber}</p>
 					    						<p>Description: {post.dayInfo}</p>
-					    						<p>Amount Spent: {post.amountSpent}</p>
+					    						<p>Amount Spent: ${post.amountSpent}</p>
 					    						<button onClick={() => this.deletePostcard(post.key)}>Delete</button>
 				    						</div>
 			    						</li>
@@ -174,6 +198,8 @@ class App extends React.Component {
 					const dbPostcard = snapshot.val();
 					const newPostcard = [];
 					for (let key in dbPostcard) {
+						// console.log(dbPostcard[key].location)
+						// for(let item in dbPostcard[key])
 						newPostcard.push({
 							key: key,
 							location: dbPostcard[key].location,
@@ -182,8 +208,11 @@ class App extends React.Component {
 							dayInfo: dbPostcard[key].dayInfo,
 							image_url: dbPostcard[key].image_url
 						});
+						// if(dbPostcard[key].location !== undefined) {
+						// 	newPostcard.location = dbPostcard[key].location
+						// }
 					}
-					console.log(newPostcard);
+					// console.log(newPostcard);
 					this.setState({
 						postcards: newPostcard
 					});
@@ -196,32 +225,18 @@ class App extends React.Component {
     		}
     	});
     }
+// <Autocomplete name="location" value={this.props.postcard.location} id="location" type="text" placeholder="Location" onPlaceSelected={(place) => {
+//       						console.log(place);
+//       						const myPlace = place.formatted_address
+//       						this.setState({
+// 							location: myPlace
+// 							})
+//     					}}/>
+// format="DD/MM/YYYY" date='6-12-2017'
 }
 
 
 
-class PostcardGrid extends React.Component {
-	render() {
-		return (
-			<div className="container">
-				<h1>My Postcards</h1>
-				<p>To add a new postcard, enter some information about your trip.</p>
-				<form onSubmit={this.props.createPostcard}>
-					<Autocomplete name="location" value={this.props.postcard.location} onChange={this.props.handleChange} id="location" type="text" placeholder="Location" onPlaceSelected={(place) => {
-      						console.log(place);
-      						this.setState({
-							location: place.formatted_address
-							})
-    					}}/>
-					<Calendar name="dayNumber" format="DD/MM/YYYY" date='4-12-2014' value={this.props.postcard.dayNumber}onChange={this.props.handleChange} id="dayNumber" type="text" placeholder="Day Number"/>
-					<input name="amountSpent" value={this.props.postcard.amountSpent}onChange={this.props.handleChange} id="amountSpent" type="text" placeholder="Amount you spent"/>
-					<textarea name="dayInfo" value={this.props.postcard.dayInfo} onChange={this.props.handleChange} id="dayInfo" cols="30" rows="1" maxLength="600" placeholder="Description (max 600 characters)"></textarea>
-					<input name="postcardImage" value={this.props.postcard.postcardImage} onChange={this.props.uploadPhoto} id="postcardImage" type="file" accept="image/*"/>
-					<input type="submit" value="Submit"/>
-				</form>
-			</div>
-		)
-	}
-}
+
 
 ReactDOM.render(<App />, document.getElementById('app'));
