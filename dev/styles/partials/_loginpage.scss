@@ -42,10 +42,12 @@ div#slider figure {
 	background-color: rgba(0,0,0,0.7);
 	z-index: 200;
 	h1 {
-		color: $blueGrey;
-		font-size: 80px;
+		// color: $blueGrey;
+		color: white;
+		font-family: 'Oleo Script Swash Caps', cursive;
+		font-size: 90px;
 		top: 20%;
-		text-transform: uppercase;
+		// text-transform: uppercase;
 		// transform: translateY(-50%);
 		position: absolute;
 		left: 50%;
@@ -54,9 +56,9 @@ div#slider figure {
 	}
 	h3 {
 		text-transform: uppercase;
-		font-family: 'Roboto', sans-serif;
+		font-family: 'Oswald', sans-serif;
 		font-weight: 300;
-		color: #92AFC0;
+		color: $seafoam;
 		position: absolute;
 		left: 50%;
 		transform: translateX(-50%);

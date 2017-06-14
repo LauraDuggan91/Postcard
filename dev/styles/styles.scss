@@ -3,12 +3,15 @@ $darkBlue: #0F3F55;
 $grey: #5B5150;
 $cream: #E6E1DF;
 $lightBlue: #4F8BA6;
+$seafoam: #ABC7C5;
+$darkGreen: #97D3D3;
+$darkGrey: #6B6B6B;
+
 
 
 
 @import "./partials/setup";
 @import "./partials/loginpage";
-@import "./partials/calendar";
 @import "./partials/form";
 @import "./partials/postcard";
 
@@ -24,23 +27,46 @@ ul {
 }
 
 .container {
-	max-width: 900px;
+	// max-width: 900px;
 	text-align: center;
 	margin: 0 auto;
 	h1 {
-		color: $blueGrey;
-		border-bottom: 3px solid $darkBlue;
-		font-family: 'Roboto', sans-serif;
-		text-transform: uppercase;
+		color: #fff;
+		// border-bottom: 2px solid $darkGreen;
+		// font-family: 'Roboto', sans-serif;
+		font-family: 'Oleo Script Swash Caps', cursive;
+		// text-transform: uppercase;
 		font-weight: 700;
-		font-size: 40px;
-		padding-bottom: 10px;
+		font-size: 60px;
+		padding: 10px 40px;
+		margin-top: 0px;
+		position: absolute;
+		top: 30%;
+		// transform: translateY(-50%);
+		left: 50%;
+		transform: translateX(-50%);
+		background-color: rgba(0,0,0,0.5);
 	}
 }
 
+h3 {
+	font-family: 'Oswald', sans-serif;
+
+}
+
+.headerImage {
+	height: 300px;
+	background: url(../../assets/imageslider3.jpg);
+	// background-attachment: fixed;
+	background-size: cover;
+	background-position: center;
+	position: relative;
+	
+}
+
 p {
-	color: $grey;
-	font-family: sans-serif;
+	color: $darkGrey;
+	font-family: 'Oswald', sans-serif;
 }
 
 .logoutButton {
@@ -48,7 +74,8 @@ p {
 	position: absolute;
 	right: 20px;
 	top: 20px;
-	// margin-right: 20px;
+	margin: 0;
+	z-index: 1000;
 }
 
 .modalStyle {
@@ -59,6 +86,9 @@ p {
     z-index: 9999;
     background: #fff;
 }
+.addNewPostcardButton {
+	margin-bottom: 40px;
+}
 
 .backgroundModal{
 	position: absolute;
@@ -68,6 +98,18 @@ p {
     left: 0px;
     z-index: 9998;
     background: rgba(0, 0, 0, 0.3);
+}
+
+.totalcost {
+	background-color: $darkGreen;
+	padding: 15px;
+	p {
+		font-size: 20px;
+	}
+	.bolded {
+		color: black;
+		font-size: 25px;
+	}
 }
 
 

@@ -4,9 +4,10 @@ import firebase, { config, auth, provider, dbRef} from './firebase.js'
 import { 
     BrowserRouter as Router, 
     Route, Link } from 'react-router-dom';
-
 import PostcardForm from './components/postcardform.js';
-import Modal from './components/modal.js'
+import Modal from './components/modal.js';
+// import Autocomplete from 'react-google-autocomplete';
+// import Calendar from 'react-input-calendar';
 
 
 //user logs into app using google
@@ -15,6 +16,15 @@ import Modal from './components/modal.js'
 //ability to sort entries by date or by country or randomly or by cost
 
 
+
+// class Child extends React.Component {
+// 	render() {
+// 		return(
+
+			
+// 		)
+// 	}
+// }
 
 
 //all login info needs to be in main component
@@ -26,22 +36,25 @@ class App extends React.Component {
 			postcards: [],
 			loggedIn: false,
 			user: null,
-			isModalOpen: false
+			isModalOpen: false,
+			childVisible: false
 		}
 		this.createPostcard = this.createPostcard.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.uploadPhoto = this.uploadPhoto.bind(this);
 		this.openModal = this.openModal.bind(this);
 		this.closeModal = this.closeModal.bind(this);
+		this.onClick = this.onClick.bind(this);
 		this.login = this.login.bind(this);
 		this.logout = this.logout.bind(this);
-		this.onPlaceSelected = this.onPlaceSelected.bind(this);
+
 	}
 	uploadPhoto(e) {
 		e.preventDefault();
 		let file = e.target.files[0];
 		this.file = file;
 	}
+
 	createPostcard(e) { //On Submit...		
 		e.preventDefault();
 
@@ -51,7 +64,6 @@ class App extends React.Component {
 
 		postcardPhoto.put(this.file).then((snapshot) => {
 		postcardPhoto.getDownloadURL().then((url) => {
-				// console.log(this.state);
 				const postcardObj = Object.assign({}, this.state.postcard);
 				postcardObj.image_url = url;
 				const userId = this.state.user.uid;
@@ -71,18 +83,7 @@ class App extends React.Component {
 			}); 
 		})
 	}
-	onPlaceSelected(place) {
-		// console.log(place);
-		const myPlace = place.formatted_address
-		const postcard = Object.assign({},this.state.postcard);
-		postcard.location = myPlace;
-		this.setState({
-			postcard
-		});
-	}
-	onDateSelected(date) {
-		console.log(date)
-	}
+
 	handleChange(e) {
 		const newPostcard = Object.assign({}, this.state.postcard);
 		newPostcard[e.target.name] = e.target.value;
@@ -97,8 +98,6 @@ class App extends React.Component {
 	}
 
 	openModal(e){
-	e.preventDefault();
-	// console.log(this)
 		this.setState({
 			isModalOpen: true
 		});
@@ -128,6 +127,7 @@ class App extends React.Component {
 			})
 		});
 	}
+
     render() {
     	const showPostcard = () => {
 	    	if (this.state.loggedIn === true) {
@@ -136,28 +136,42 @@ class App extends React.Component {
 	    				<div>
 			    			<div>
 			    				<button className="logoutButton" onClick={this.logout}>Log Out</button>
-			    				<PostcardForm postcard={this.state.postcard} postcards={this.state.postcards} createPostcard={this.createPostcard} handleChange={this.handleChange} uploadPhoto={this.uploadPhoto} onPlaceSelected={this.onPlaceSelected} onDateSelected={this.onDateSelected} openModal={this.openModal} closeModal={this.closeModal} isModalOpen={this.state.isModalOpen} />
+			    				<PostcardForm postcard={this.state.postcard} postcards={this.state.postcards} createPostcard={this.createPostcard} handleChange={this.handleChange} uploadPhoto={this.uploadPhoto} openModal={this.openModal} closeModal={this.closeModal} isModalOpen={this.state.isModalOpen} />
 			    				
 			    			</div>
 			    			<ul>
 			    				{this.state.postcards.map((post) => {
-			    					// console.log(post)
+			    					
 			    					return (
 			    						<li className="singleCard" key={post.key}>
-				    						<div className="displayImage">
+				    						<div className="displayImage" onClick={this.onClick}>
 				    							<img className="renderedImage" src={post.image_url}/>
 				    						</div>
-				    						<div className="displayBack clearfix">
-					    						<h3>{post.location}</h3>
-					    						<p>Date: {post.dayNumber}</p>
-					    						<p>Description: {post.dayInfo}</p>
-					    						<p>Amount Spent: ${post.amountSpent}</p>
-					    						<button onClick={() => this.deletePostcard(post.key)}>Delete</button>
-				    						</div>
+					    					<div className="displayBack clearfix">
+					    						<div className="postcardLeft">
+					    							<p>{post.dayInfo}</p>
+					    						</div>
+					    						<div className="postcardRight">
+						    						<h3>{post.location}</h3>
+						    						<p>Day Number: {post.dayNumber}</p>
+						    						<p>Amount Spent: ${post.amountSpent}</p>
+						    						<button onClick={() => this.deletePostcard(post.key)}>Delete</button>
+					    						</div>
+					    					</div>
+				    						
 			    						</li>
 			    					)	
+				    						// {this.state.childVisible ?<Child /> : null}
 			    				})}
 			    			</ul>
+			    			<div className='totalcost container'>
+			    			<p>Total amount spent on travelling: <span className="bolded">${this.state.postcards.reduce((acc, val) => {
+			    				return Number(acc) + Number(val.amountSpent);
+			    			}, 0)}</span></p>
+			  				
+
+			    			</div>
+			
 			    			<footer className="container">
 			    				<p>&copy; Laura Duggan 2017</p>
 			    			</footer>
@@ -191,6 +205,11 @@ class App extends React.Component {
 	    	</main>
 	    )
     }
+    onClick() {
+    	this.setState({
+    		childVisible: !this.state.childVisible
+    	})
+    }
     componentDidMount() {
     	auth.onAuthStateChanged((user) => {
     		if (user) {
@@ -205,8 +224,6 @@ class App extends React.Component {
 					const dbPostcard = snapshot.val();
 					const newPostcard = [];
 					for (let key in dbPostcard) {
-						// console.log(dbPostcard[key].location)
-						// for(let item in dbPostcard[key])
 						newPostcard.push({
 							key: key,
 							location: dbPostcard[key].location,
@@ -215,11 +232,7 @@ class App extends React.Component {
 							dayInfo: dbPostcard[key].dayInfo,
 							image_url: dbPostcard[key].image_url
 						});
-						// if(dbPostcard[key].location !== undefined) {
-						// 	newPostcard.location = dbPostcard[key].location
-						// }
 					}
-					// console.log(newPostcard);
 					this.setState({
 						postcards: newPostcard
 					});

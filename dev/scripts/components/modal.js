@@ -10,7 +10,7 @@ export default class Modal extends React.Component {
         	<div className='modalStyle'>
             {this.props.children}
         	</div>
-        	{!this.props.noBackdrop &&<div className='backgroundModal' onClick={this.props.onClose}/>}
+        	<div className='backgroundModal' onClick={this.props.onClose}/>}
         </div>
   		)
     }

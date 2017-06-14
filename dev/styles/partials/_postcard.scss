@@ -12,11 +12,14 @@ ul {
 }
 
 li {
-	width: 50%;
+	margin: 8px;
+	width: calc(50% - 16px);
+	box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
 }
 
 .renderedImage {
 	max-width: 100%;
+	vertical-align:bottom;
 	// max-height: 300px;
 	// object-fit: cover;
 }
@@ -24,12 +27,38 @@ li {
 .displayBack {
 	visibility: hidden;
 	position: absolute;
+	
 	top:0;
 	left: 0;
 	bottom: 0;
 	right: 0;
 	z-index: 100;
-	background-color: $blueGrey;
+	background-color: $cream;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	p {
+		color: $darkBlue;
+	}
+	.postcardLeft, .postcardRight {
+		width: calc(50% - 40px);
+		margin: 15px 20px;
+	}
+	.postcardLeft p {
+		line-height: 30px;
+		// border-right: 2px solid $darkGreen;
+		// padding-right: 20px;
+		// text-decoration: underline;
+	}
+	.postcardRight {
+		border-left: 2px solid $darkGreen;
+		padding-left: 20px;
+	}
+
+	
+
 }
 
 .singleCard:hover .displayBack{
