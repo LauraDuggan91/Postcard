@@ -1,0 +1,30 @@
+/* Portrait tablet and small desktops */
+@media (max-width: 940px) {
+	.container {
+		h1 {
+			font-size: 40px;
+			top: 20%;
+		}
+	}
+
+	p {
+		font-size: 16px;
+	}
+}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 700px) {
+	li {
+		width: calc(100% - 16px);
+	}
+}
+
+/* Landscape phones and down */
+@media (max-width: 480px) {
+	.overlay {
+		h1 {
+			font-size: 65px;
+		}
+	}
+
+}

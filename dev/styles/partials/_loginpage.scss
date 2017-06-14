@@ -42,13 +42,10 @@ div#slider figure {
 	background-color: rgba(0,0,0,0.7);
 	z-index: 200;
 	h1 {
-		// color: $blueGrey;
 		color: white;
 		font-family: 'Oleo Script Swash Caps', cursive;
 		font-size: 90px;
 		top: 20%;
-		// text-transform: uppercase;
-		// transform: translateY(-50%);
 		position: absolute;
 		left: 50%;
 		transform: translateX(-50%);
@@ -63,7 +60,6 @@ div#slider figure {
 		left: 50%;
 		transform: translateX(-50%);
 		bottom: 40%;
-		// background-color: white;
 	}
 	button {
 		position: absolute;

@@ -20,8 +20,6 @@ li {
 .renderedImage {
 	max-width: 100%;
 	vertical-align:bottom;
-	// max-height: 300px;
-	// object-fit: cover;
 }
 
 .displayBack {
@@ -48,9 +46,6 @@ li {
 	}
 	.postcardLeft p {
 		line-height: 30px;
-		// border-right: 2px solid $darkGreen;
-		// padding-right: 20px;
-		// text-decoration: underline;
 	}
 	.postcardRight {
 		border-left: 2px solid $darkGreen;
