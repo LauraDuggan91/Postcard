@@ -17,9 +17,6 @@ $darkGrey: #6B6B6B;
 @import "./partials/mediaqueries";
 
 
-body {
-	// background-color: #f8f6f1;
-}
 
 ul {
 	text-decoration: none;
@@ -27,23 +24,17 @@ ul {
 }
 
 .container {
-	// max-width: 900px;
 	text-align: center;
 	margin: 0 auto;
 	h1 {
 		color: #fff;
-		
-		// border-bottom: 2px solid $darkGreen;
-		// font-family: 'Roboto', sans-serif;
 		font-family: 'Oleo Script Swash Caps', cursive;
-		// text-transform: uppercase;
 		font-weight: 700;
 		font-size: 60px;
 		padding: 10px 40px;
 		margin-top: 0px;
 		position: absolute;
 		top: 30%;
-		// transform: translateY(-50%);
 		left: 50%;
 		transform: translateX(-50%);
 		background-color: rgba(0,0,0,0.5);
@@ -52,6 +43,9 @@ ul {
 
 h3 {
 	font-family: 'Oswald', sans-serif;
+	font-size: 50px;
+	margin-top: 0px;
+	margin-bottom: 0px;	4567 
 
 }
 
@@ -101,14 +95,15 @@ p {
 }
 
 .totalcost {
-	background-color: $darkGreen;
-	padding: 15px;
+	background-color: $darkGrey;
+	padding: 10px;
 	p {
-		font-size: 20px;
+		color: $darkGreen;
+		font-size: 30px;
 	}
 	.bolded {
 		color: black;
-		font-size: 25px;
+		font-size: 35px;
 	}
 }
 

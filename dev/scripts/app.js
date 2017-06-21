@@ -36,6 +36,7 @@ class App extends React.Component {
 		this.closeModal = this.closeModal.bind(this);
 		this.login = this.login.bind(this);
 		this.logout = this.logout.bind(this);
+		this.deletePostcard = this.logout.bind(this);
 
 	}
 	uploadPhoto(e) {
@@ -81,6 +82,7 @@ class App extends React.Component {
 		});
 	}
 	deletePostcard(key) {
+		console.log(key);
 		const userId = this.state.user.uid;
 		const userRef = firebase.database().ref(`${userId}/${key}`);
 		userRef.remove();
@@ -126,15 +128,21 @@ class App extends React.Component {
 			    			<div>
 			    				<button className="logoutButton" onClick={this.logout}>Log Out</button>
 			    				<PostcardForm postcard={this.state.postcard} postcards={this.state.postcards} createPostcard={this.createPostcard} handleChange={this.handleChange} uploadPhoto={this.uploadPhoto} openModal={this.openModal} closeModal={this.closeModal} isModalOpen={this.state.isModalOpen} />
-			    				<EntirePostcard postcards={this.state.postcards} postcard={this.state.postcard}/>
+			    				
+				    			<div className='totalcost container'>
+				    				<p>Total amount spent on travelling: <span className="bolded">${this.state.postcards.reduce((acc, val) => {
+				    				return Number(acc) + Number(val.amountSpent);
+				    			}, 0)}</span></p>
+				    			</div>
+
+			    				<ul>
+				    				{this.state.postcards.map((post) => {
+				    					return <EntirePostcard postcard={post} key={post.key} />
+				    				})}
+			    				</ul>
 			    			</div>
 
 			    			
-			    			<div className='totalcost container'>
-			    			<p>Total amount spent on travelling: <span className="bolded">${this.state.postcards.reduce((acc, val) => {
-			    				return Number(acc) + Number(val.amountSpent);
-			    			}, 0)}</span></p>
-			    			</div>
 			
 			    			<footer className="container">
 			    				<p>&copy; Laura Duggan 2017</p>
@@ -213,53 +221,53 @@ class EntirePostcard extends React.Component  {
 	constructor() {
 		super();
 		this.state={
-			childVisible: false
+			// childVisible: false
+			flipped: false,
+			clicked: false
 		}
 
 		this.onClick = this.onClick.bind(this);
+		// this.deletePostcard = this.deletePostcard.bind(this);
 	}
-	onClick() {
-    	this.setState({
-    		childVisible: true
-    	})	
-    }
+	// deletePostcard(key) {
+	// 	console.log(key);
+		// const userId = this.props.user.uid;
+		// const userRef = firebase.database().ref(`${userId}/${key}`);
+		// userRef.remove();
+	// }
+
+	// <button onClick={() => this.props.deletePostcard(this.props.postcard.key)}>Delete</button>
+ 	onClick() {
+	    this.setState({
+	      flipped: !this.state.flipped,
+	      clicked: true
+	    })
+	}
 	render() {
+		var flippedCSS = this.state.flipped ? 'active displayBack': 'displayBack';
 		return (
-		<div>
-			{console.log(this.props.postcards)}
-			<ul>
-				{this.props.postcards.map((post) => {
-					return (
-						<li className="singleCard" key={post.key}>
-							<div className="displayImage" onClick={() => this.setState({className:"active"})}>
-								<img className="renderedImage" src={post.image_url}/>
-							</div>
+			<li>
+				<div className="singleCard" onClick={this.onClick} >
+					<div className="renderedImage">
+						<img className="renderedImage" src={this.props.postcard.image_url}/>
+					</div>
 
-							<div className={this.state.className === 'active'? 'active displayBack': 'displayBack'}>
-	    						<div className="postcardLeft">
-	    							<p>{post.dayInfo}</p>
-	    						</div>
-	    						<div className="postcardRight">
-		    						<h3>{post.location}</h3>
-		    						<p>Day Number: {post.dayNumber}</p>
-		    						<p>Amount Spent: ${post.amountSpent}</p>
-		    						<button onClick={() => this.deletePostcard(post.key)}>Delete</button>
-	    						</div>
-							</div>
-
-
-						</li>
-					)	
-				})}
-			</ul>
-		</div>
+					<div className={flippedCSS}>
+						<div className="postcardLeft">
+							<p>{this.props.postcard.dayInfo}</p>
+						</div>
+						<div className="postcardRight">
+    						<h3>{this.props.postcard.location}</h3>
+    						<p>Day Number: {this.props.postcard.dayNumber}</p>
+    						<p>Amount Spent: ${this.props.postcard.amountSpent}</p>
+    						
+						</div>
+					</div>
+				</div>
+			</li>
 		)
 	}
 }
-
-
-
-
 
 
 
