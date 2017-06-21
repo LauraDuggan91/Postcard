@@ -17,15 +17,6 @@ import Modal from './components/modal.js';
 
 
 
-// class Child extends React.Component {
-// 	render() {
-// 		return(
-
-			
-// 		)
-// 	}
-// }
-
 
 //all login info needs to be in main component
 class App extends React.Component {
@@ -37,14 +28,12 @@ class App extends React.Component {
 			loggedIn: false,
 			user: null,
 			isModalOpen: false,
-			childVisible: false
 		}
 		this.createPostcard = this.createPostcard.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.uploadPhoto = this.uploadPhoto.bind(this);
 		this.openModal = this.openModal.bind(this);
 		this.closeModal = this.closeModal.bind(this);
-		this.onClick = this.onClick.bind(this);
 		this.login = this.login.bind(this);
 		this.logout = this.logout.bind(this);
 
@@ -137,39 +126,14 @@ class App extends React.Component {
 			    			<div>
 			    				<button className="logoutButton" onClick={this.logout}>Log Out</button>
 			    				<PostcardForm postcard={this.state.postcard} postcards={this.state.postcards} createPostcard={this.createPostcard} handleChange={this.handleChange} uploadPhoto={this.uploadPhoto} openModal={this.openModal} closeModal={this.closeModal} isModalOpen={this.state.isModalOpen} />
-			    				
+			    				<EntirePostcard postcards={this.state.postcards} postcard={this.state.postcard}/>
 			    			</div>
-			    			<ul>
-			    				{this.state.postcards.map((post) => {
-			    					
-			    					return (
-			    						<li className="singleCard" key={post.key}>
-				    						<div className="displayImage" onClick={this.onClick}>
-				    							<img className="renderedImage" src={post.image_url}/>
-				    						</div>
-					    					<div className="displayBack clearfix">
-					    						<div className="postcardLeft">
-					    							<p>{post.dayInfo}</p>
-					    						</div>
-					    						<div className="postcardRight">
-						    						<h3>{post.location}</h3>
-						    						<p>Day Number: {post.dayNumber}</p>
-						    						<p>Amount Spent: ${post.amountSpent}</p>
-						    						<button onClick={() => this.deletePostcard(post.key)}>Delete</button>
-					    						</div>
-					    					</div>
-				    						
-			    						</li>
-			    					)	
-				    						// {this.state.childVisible ?<Child /> : null}
-			    				})}
-			    			</ul>
+
+			    			
 			    			<div className='totalcost container'>
 			    			<p>Total amount spent on travelling: <span className="bolded">${this.state.postcards.reduce((acc, val) => {
 			    				return Number(acc) + Number(val.amountSpent);
 			    			}, 0)}</span></p>
-			  				
-
 			    			</div>
 			
 			    			<footer className="container">
@@ -205,11 +169,7 @@ class App extends React.Component {
 	    	</main>
 	    )
     }
-    onClick() {
-    	this.setState({
-    		childVisible: !this.state.childVisible
-    	})
-    }
+    
     componentDidMount() {
     	auth.onAuthStateChanged((user) => {
     		if (user) {
@@ -246,6 +206,55 @@ class App extends React.Component {
     	});
     }
 
+}
+
+
+class EntirePostcard extends React.Component  {
+	constructor() {
+		super();
+		this.state={
+			childVisible: false
+		}
+
+		this.onClick = this.onClick.bind(this);
+	}
+	onClick() {
+    	this.setState({
+    		childVisible: true
+    	})	
+    }
+	render() {
+		return (
+		<div>
+			{console.log(this.props.postcards)}
+			<ul>
+				{this.props.postcards.map((post) => {
+					return (
+						<li className="singleCard" key={post.key}>
+							<div className="displayImage" onClick={() => this.setState({className:"active"})}>
+								<img className="renderedImage" src={post.image_url}/>
+							</div>
+
+							<div className={this.state.className === 'active'? 'active displayBack': 'displayBack'}>
+	    						<div className="postcardLeft">
+	    							<p>{post.dayInfo}</p>
+	    						</div>
+	    						<div className="postcardRight">
+		    						<h3>{post.location}</h3>
+		    						<p>Day Number: {post.dayNumber}</p>
+		    						<p>Amount Spent: ${post.amountSpent}</p>
+		    						<button onClick={() => this.deletePostcard(post.key)}>Delete</button>
+	    						</div>
+							</div>
+
+
+						</li>
+					)	
+				})}
+			</ul>
+		</div>
+		)
+	}
 }
 
 
